@@ -20,7 +20,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "../data")
 # hyperparameters
 BATCH_SIZE = 64
 # N_EPOCHS = 4
-N_EPOCHS = 2
+N_EPOCHS = 10
 
 # set seed
 seed_val = 42
@@ -35,7 +35,7 @@ device = torch.device("cuda")
 
 def _load_train(label_encoder, tokenizer):
     df = pd.read_csv(os.path.join(DATA_DIR, "train.csv"))
-    df = df.head(10)    # temporary
+    # df = df.head(10)    # temporary
 
     # encode label
     df.sentiment = label_encoder.fit_transform(df.sentiment)
@@ -74,7 +74,10 @@ def _load_train(label_encoder, tokenizer):
 
 
 def _load_val(label_encoder, tokenizer):
-    df = pd.read_csv(os.path.join(DATA_DIR, "test.csv"))
+    # df = pd.read_csv(os.path.join(DATA_DIR, "test.csv"))
+    df = pd.read_csv(os.path.join(DATA_DIR, "train.csv"))
+    # df = df.head(10)  # temporary
+
     input_ids = []
     attention_masks = []
 
@@ -121,12 +124,14 @@ def _load_data(tokenizer):
     return train_dataloader, val_dataloader
 
 
+
 # start train
 def flat_accuracy(preds, labels):
     pred_flat = np.argmax(preds, axis=1).flatten()
     labels_flat = labels.flatten()
-    print(pred_flat)
-    print(labels_flat)
+    # print(preds)
+    # print(pred_flat)
+    # print(labels_flat)
 
     return np.sum(pred_flat == labels_flat) / len(labels_flat)
 
